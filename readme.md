@@ -20,7 +20,7 @@ Notes for working with and managing MongoDB database
     regular expressions
     js code
   }
-
+  BSON Types - https://docs.mongodb.com/manual/reference/bson-types/index.html
 
 Start server
   create 'data' folder in root or another directory
@@ -58,4 +58,6 @@ Create database
     db.[collectionName].find({}, {_id:0}).sort({key:1})     // 1 ascending, -1 descending
 
   or-logic
-    db.[collectionName].find({$or: [{key:1}, {_id:0}]
+    db.[collectionName].find({$or: [{key:1}, {key:4}], {_id:0})     // searches for items with key values of 1 or 4. 
+
+  

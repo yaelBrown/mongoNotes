@@ -1,4 +1,5 @@
 Notes for working with and managing MongoDB database
+  https://www.youtube.com/playlist?list=PLLAZ4kZ9dFpOFJ9JcVW9u4PlSWO-VFoao
   mdb uses bson (binary JSON). 
   ( "key": "value" )
   json to mongoose schema: https://transform.now.sh/json-to-mongoose
@@ -21,6 +22,10 @@ Notes for working with and managing MongoDB database
     js code
   }
   BSON Types - https://docs.mongodb.com/manual/reference/bson-types/index.html
+
+  Mongo is about specifiying filters and being able to do stuff. 
+
+  BulkWrites can only be done on one collection. 
 
 Start server
   create 'data' folder in root or another directory
@@ -60,4 +65,50 @@ Create database
   or-logic
     db.[collectionName].find({$or: [{key:1}, {key:4}], {_id:0})     // searches for items with key values of 1 or 4. 
 
-  
+  Update records
+    db.[collectionName].updateOne({key: "val1"}, { $set: { key: "val2"} })  // updates one entry in db. Searches for key with val1 and updates it to val2. 
+
+    db.[collectionName].updateMany({key: "val1"}, { $set: { key: "val2"} })   // does the same and updates all (many)
+
+  Replace records
+    db.[collectionName].replaceOne({key: "val1"}, { $set: { key: "val2"} })    // replaces the complete record
+
+  Delete records
+    db.[collectionName].deleteMany({})    // Deletes all records in the database
+
+    db.[collectionName].deleteOne({key: "val1"})  // Deletes all recods with a key with the value of val1
+
+bulkWrite     // Is a for mongoDB to do multiple functions in one request. 
+  db.[collectionName].bulkWrite(
+    [
+      { insertOne: ...},
+      { insertOne: ...},
+      { insertOne: ...},
+      { deleteOne: ...},
+      { replaceOne: ...}
+    ]
+  )
+
+Text indexing     // Indexes your database so you do text query to search db. 
+  db.[collectionName].createIndex({key: "text", key: "text"})
+
+  db.[collectionName].find({ $text: { $search: "val1" }})     // searches for value that was indexed
+
+  db.[collectionName].find({ $text: { $search: "val1" }}
+    { score: { $meta: "textScore"}})        // $meta score ranks your results to how close they are to the query.
+
+  db.[collectionName].find({ $text: { $search: "val1" }}
+    { score: { $meta: "textScore"}}).sort( {score: {$meta: "textScore"}} )    // $meta sorts by score.  
+
+Aggregation     // Process data records and do computation and return resuls. 
+  db.[collectionName].count({key: val1})      // counts keys with values
+
+  db.[collectionName].distinct("key")       // provides array of distinct items, does not include duplicates
+
+  db.[collectionName].aggregate(
+    [
+      {$match: {} },
+      {$group: {key: val1, total: {$sum: "$key2"}}}     // adds all the items with $sum keyword
+    ]
+  )
+

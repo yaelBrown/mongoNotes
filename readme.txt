@@ -33,13 +33,27 @@ Start server
   mongod -dbpath [path to data folder]
     dont close out of window
 
+Create Database User
+
 connect to server
   mongo [ip:27017]
 
 Create database
   use [dbName]
 
-  create collection
+  Show available Databases
+    show dbs
+
+  Show current Databases
+    db
+
+Create Users
+  db.createUser({user: "username", pwd: "password", roles: ["readWrite","dbAdmin"]}) // these three fields are mandatory
+
+  Create Users (with optional parameters)
+    db.createUser({user: "username", pwd: "password", roles: ["readWrite","dbAdmin"], customData: { employeeID: 123 }, authenticationRestrictions : [{clientSource : ["192.0.2.0"], serverAddress : ["198.1.100.0"] }]}) 
+
+Create collection
     db.createCollection("name[collectionName]")
     (collection names should be lowercase and plural)
 
